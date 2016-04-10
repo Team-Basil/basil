@@ -37,6 +37,8 @@ public class Recipe {
 		if(!hasStep(currentStepNumber)) {
 			currentStepNumber -= inc;
 		}
+		
+		if(currentStepNumber <= 0) currentStepNumber = 1;
 	}
 	
 	public boolean hasStep(int stepNumber) {

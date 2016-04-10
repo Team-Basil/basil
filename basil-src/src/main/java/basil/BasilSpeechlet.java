@@ -69,9 +69,27 @@ public class BasilSpeechlet implements Speechlet {
         }
         else if("AnyLineIntent".equals(intentName))
         {
+        	int lineNum = 1;
+        	
+        	Slot lineOrdSlot = intent.getSlot("lineOrd");
+        	if(lineOrdSlot != null) {
+        		String lineNumOrdinal = lineOrdSlot.getValue();
+        		
+        		if(!StringUtils.isEmpty(lineNumOrdinal)) {
+        			System.out.println("Got lineNumOrdinal: " + lineNumOrdinal);
+        			lineNum = LineNumLookup.getLineNum(lineNumOrdinal);
+        		}
+        	}
+        	
         	Slot lineNumSlot = intent.getSlot("lineNum");
-        	String lineNumOrdinal = lineNumSlot.getValue();
-        	int lineNum = LineNumLookup.getLineNum(lineNumOrdinal);
+        	if(lineNumSlot != null) {
+        		String lineNumStr = lineNumSlot.getValue();
+        		
+        		if(!StringUtils.isEmpty(lineNumStr)) {
+        			System.out.println("Got lineNum: " + lineNumStr);
+        			lineNum = Integer.parseInt(lineNumStr);
+        		}
+        	}
 
         	Recipe recipe = new Recipe();
         	readRecipe(recipe);
@@ -102,6 +120,13 @@ public class BasilSpeechlet implements Speechlet {
         	updateFirebase("start-recipe", recipe);
         	
         	return say("Let's get started. Step 1. " + recipe.getCurrentStep());
+        }
+        else if("RepeatIntent".equals(intentName))
+        {
+        	Recipe recipe = new Recipe();
+        	readRecipe(recipe);
+        	
+        	return say(recipe.getCurrentStep());
         }
         else {
             throw new SpeechletException("Invalid Intent");
