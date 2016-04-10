@@ -119,7 +119,7 @@ public class BasilSpeechlet implements Speechlet {
         	
         	updateFirebase("start-recipe", recipe);
         	
-        	return say("Let's get started. Step 1. " + recipe.getCurrentStep());
+        	return say("Let's get this party started. Step 1. " + recipe.getCurrentStep());
         }
         else if("RepeatIntent".equals(intentName))
         {
