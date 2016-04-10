@@ -34,3 +34,10 @@ LastLineIntent go to the last line
 LastLineIntent last line
 LastLineIntent last step
 LastLineIntent last
+
+RepeatIntent repeat that
+RepeatIntent say that again
+RepeatIntent say it again
+RepeatIntent tell me again
+RepeatIntent repeat it
+RepeatIntent tell it again

@@ -26,14 +26,10 @@
     {
       "intent": "StartIntent"
     },
+ 
     {
-      "intent": "SearchVideoIntent",
-      "slots": [
-        {
-          "name": "searchTerm",
-          "type": "ordinal"
-        }
-      ]
+      "intent": "RepeatIntent"
+      
     }
   ]
 }
