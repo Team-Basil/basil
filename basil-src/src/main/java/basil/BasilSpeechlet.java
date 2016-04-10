@@ -15,6 +15,7 @@ import com.firebase.client.*;
 public class BasilSpeechlet implements Speechlet {
 	private static final Logger log = LoggerFactory.getLogger(BasilSpeechlet.class);
 	
+	// We can do proper account linking later
 	protected static String userId = "test-user";
 	
 	protected Firebase firebase;
@@ -42,27 +43,27 @@ public class BasilSpeechlet implements Speechlet {
         Intent intent = request.getIntent();
         String intentName = (intent != null) ? intent.getName() : null;
 
-        final Semaphore semaphore = new Semaphore(0);
+
         
         if ("NextLineIntent".equals(intentName))
         {
         	Recipe recipe = new Recipe();
-        	readRecipe(recipe, semaphore);
+        	readRecipe(recipe);
         	
         	recipe.updateCurrentStep(1);
         	
-        	updateFirebase("next-step", recipe, semaphore);
+        	updateFirebase("next-step", recipe);
         	
             return say("Next, step " + recipe.getCurrentStepNumber() + ". " + recipe.getCurrentStep());
         }
         else if("PreviousLineIntent".equals(intentName))
         {
         	Recipe recipe = new Recipe();
-        	readRecipe(recipe, semaphore);
+        	readRecipe(recipe);
         	
         	recipe.updateCurrentStep(-1);
         	
-        	updateFirebase("previous-step", recipe, semaphore);
+        	updateFirebase("previous-step", recipe);
         	
         	return say("Going back a step, step " + recipe.getCurrentStepNumber() + ". " + recipe.getCurrentStep());
         }
@@ -73,32 +74,32 @@ public class BasilSpeechlet implements Speechlet {
         	int lineNum = LineNumLookup.getLineNum(lineNumOrdinal);
 
         	Recipe recipe = new Recipe();
-        	readRecipe(recipe, semaphore);
+        	readRecipe(recipe);
         	
         	recipe.setCurrentStep(lineNum);
         	
-        	updateFirebase("goto-step", recipe, semaphore);
+        	updateFirebase("goto-step", recipe);
         	
         	return say("Moving to step " + recipe.getCurrentStepNumber() + ". " + recipe.getCurrentStep());
         }
         else if("LastLineIntent".equals(intentName))
         {
         	Recipe recipe = new Recipe();
-        	readRecipe(recipe, semaphore);
+        	readRecipe(recipe);
         	
         	recipe.setCurrentStep(recipe.getNumberOfSteps());
         	
-        	updateFirebase("last-step", recipe, semaphore);
+        	updateFirebase("last-step", recipe);
         	
         	return say("Moving to the last step, step " + recipe.getCurrentStepNumber() + ". " + recipe.getCurrentStep());
         }
         else if("StartIntent".equals(intentName))
         {
         	Recipe recipe = new Recipe();
-        	readRecipe(recipe, semaphore);
+        	readRecipe(recipe);
         	recipe.setCurrentStep(1);
         	
-        	updateFirebase("start-recipe", recipe, semaphore);
+        	updateFirebase("start-recipe", recipe);
         	
         	return say("Let's get started. Step 1. " + recipe.getCurrentStep());
         }
@@ -107,8 +108,10 @@ public class BasilSpeechlet implements Speechlet {
         }
     }
     
-    protected void updateFirebase(String commandName, Recipe recipe, final Semaphore semaphore) {
-    	
+    protected void updateFirebase(String commandName, Recipe recipe) {
+    	// We need to wait for asynchronous firebase commands to complete before this lambda terminates.
+        final Semaphore semaphore = new Semaphore(0);
+        
     	Map<String, Object> commandStructure = new HashMap();
     	commandStructure.put("commandName", commandName);
     	commandStructure.put("currentStep", recipe.getCurrentStepNumber());
@@ -131,7 +134,10 @@ public class BasilSpeechlet implements Speechlet {
     	}
     }
     
-    protected void readRecipe(final Recipe recipe, final Semaphore semaphore) {
+    protected void readRecipe(final Recipe recipe) {
+        // We need to wait for asynchronous firebase commands to complete before this lambda terminates.
+        final Semaphore semaphore = new Semaphore(0);
+        
     	firebase.addValueEventListener(new ValueEventListener() {
 			
 			@Override

@@ -4,6 +4,9 @@ import java.util.*;
 
 import org.apache.commons.lang3.*;
 
+/**
+ * Holds the steps and current step number which is synchronized with firebase.
+ */
 public class Recipe {
 	protected int currentStepNumber;
 	protected List<String> steps;
