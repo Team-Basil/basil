@@ -1,0 +1,36 @@
+StartIntent start
+StartIntent start over
+StartIntent start recipe
+StartIntent read
+StartIntent read recipe
+StartIntent begin
+StartIntent begin recipe
+
+NextLineIntent go to the next line
+NextLineIntent go to the next step
+NextLineIntent next line
+NextLineIntent skip line
+NextLineIntent next
+NextLineIntent skip
+NextLineIntent next step
+NextLineIntent skip step
+
+PreviousLineIntent go to the previous line
+PreviousLineIntent previous line
+PreviousLineIntent previous
+PreviousLineIntent back
+PreviousLineIntent go back
+
+AnyLineIntent go to line {lineNum}
+AnyLineIntent go to step {lineNum}
+AnyLineIntent line {lineNum} 
+AnyLineIntent step {lineNum}
+AnyLineIntent go to the {lineOrd} line
+AnyLineIntent go to the {lineOrd} step
+AnyLineIntent {lineOrd} line
+AnyLineIntent {lineOrd} step
+
+LastLineIntent go to the last line
+LastLineIntent last line
+LastLineIntent last step
+LastLineIntent last
