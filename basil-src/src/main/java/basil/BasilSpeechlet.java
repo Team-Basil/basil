@@ -43,14 +43,16 @@ public class BasilSpeechlet implements Speechlet {
         Intent intent = request.getIntent();
         String intentName = (intent != null) ? intent.getName() : null;
 
-
-        
         if ("NextLineIntent".equals(intentName))
         {
         	Recipe recipe = new Recipe();
         	readRecipe(recipe);
         	
-        	recipe.updateCurrentStep(1);
+        	boolean moved = recipe.updateCurrentStep(1);
+        	
+        	if(!moved) {
+        		return say("We're already at the last step, step " + recipe.getCurrentStepNumber());
+        	}
         	
         	updateFirebase("next-step", recipe);
         	
@@ -61,7 +63,11 @@ public class BasilSpeechlet implements Speechlet {
         	Recipe recipe = new Recipe();
         	readRecipe(recipe);
         	
-        	recipe.updateCurrentStep(-1);
+        	boolean moved = recipe.updateCurrentStep(-1);
+        	
+        	if(!moved) {
+        		return say("We're already at first step");
+        	}
         	
         	updateFirebase("previous-step", recipe);
         	
@@ -94,7 +100,10 @@ public class BasilSpeechlet implements Speechlet {
         	Recipe recipe = new Recipe();
         	readRecipe(recipe);
         	
-        	recipe.setCurrentStep(lineNum);
+        	boolean moved = recipe.setCurrentStep(lineNum);
+        	if(!moved) {
+        		return say("Step " + lineNum + " is not a valid step.");
+        	}
         	
         	updateFirebase("goto-step", recipe);
         	

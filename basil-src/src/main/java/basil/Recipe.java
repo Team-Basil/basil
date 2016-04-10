@@ -19,8 +19,13 @@ public class Recipe {
 		this.steps = steps;
 	}
 	
-	public void setCurrentStep(int currentStep) {
+	// Returns true if the step is valid, false otherwise.
+	public boolean setCurrentStep(int currentStep) {
+		if(currentStep < 1) return false;
+		if(currentStep > steps.size()) return false;
+		
 		this.currentStepNumber = currentStep;
+		return true;
 	}
 	
 	public int getCurrentStepNumber() {
@@ -31,14 +36,21 @@ public class Recipe {
 		return steps.size();
 	}
 	
-	public void updateCurrentStep(int inc) {
+	// Returns true if it could move the step 
+	public boolean updateCurrentStep(int inc) {
 		currentStepNumber += inc;
 		
 		if(!hasStep(currentStepNumber)) {
 			currentStepNumber -= inc;
+			return false;
 		}
 		
-		if(currentStepNumber <= 0) currentStepNumber = 1;
+		if(currentStepNumber <= 0) {
+			currentStepNumber = 1;
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public boolean hasStep(int stepNumber) {
